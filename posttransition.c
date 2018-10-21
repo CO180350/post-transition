@@ -55,13 +55,15 @@ Town read_town(){
 void add_package(Office *o, Package p){
   if(o->package_count==o->capacity){
     o->capacity *= 2;
-    o->packages = realloc(o->packages, o->capacity*sizeof(Package));
+    Package *expanded = malloc(o->capacity*sizeof(Package));
+    unsigned i=0;
+    for(i=0; i<o->package_count; ++i){
+      expanded[i] = o->packages[i];
+    }
+    free(o->packages);
+    o->packages = expanded;
   }
   o->packages[o->package_count++] = p;
-}
-
-int is_between(unsigned x, unsigned y, unsigned z){
-  return x<=y && y<=z;
 }
 
 unsigned send_packages(Office *from, Office *to){
